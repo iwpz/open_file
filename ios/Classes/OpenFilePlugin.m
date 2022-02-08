@@ -48,12 +48,11 @@ static NSString *const CHANNEL_NAME = @"open_file";
 //            NSString *exestr = [[msg pathExtension] lowercaseString];
             _documentController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:msg]];
             _documentController.delegate = self;
-            NSString *uti = call.arguments[@"uti"];
-            BOOL isBlank = [self isBlankString:uti];
-            if(!isBlank){
-                _documentController.UTI = uti;
-            }
-//             else{
+//             NSString *uti = call.arguments[@"uti"];
+//             BOOL isBlank = [self isBlankString:uti];
+//             if(!isBlank){
+//                 _documentController.UTI = uti;
+//             }else{
 //                 if([exestr isEqualToString:@"rtf"]){
 //                     _documentController.UTI=@"public.rtf";
 //                 }else if([exestr isEqualToString:@"txt"]){
@@ -117,6 +116,7 @@ static NSString *const CHANNEL_NAME = @"open_file";
             @try {
                 BOOL previewSucceeded = [_documentController presentPreviewAnimated:YES];
                 if(!previewSucceeded){
+    OpenFilePlugin* instance = [[OpenFilePlugin alloc] initWithViewController:_viewController];
                     [_documentController presentOpenInMenuFromRect:CGRectMake(500,20,100,100) inView:_viewController.view animated:YES];
                 }
             }@catch (NSException *exception) {
@@ -154,7 +154,8 @@ static NSString *const CHANNEL_NAME = @"open_file";
 }
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
-    return  _viewController;
+  
+    return [UIApplication sharedApplication].delegate.window.rootViewController;
 }
 
 - (BOOL) isBlankString:(NSString *)string {
